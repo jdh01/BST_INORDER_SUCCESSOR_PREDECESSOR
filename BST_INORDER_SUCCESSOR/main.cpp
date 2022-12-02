@@ -39,6 +39,14 @@ Node* Find(Node* root, int data)
 		return Find(root->right, data);
 }
 
+Node* FindMax(Node* root)
+{
+	if (root == NULL) return NULL;
+	while (root->right != NULL)
+		root = root->right;
+	return root;
+}
+
 Node* FindMin(Node* root)
 {
 	if (root == NULL) return NULL;
@@ -75,23 +83,23 @@ Node* GetPredecessorPtr(Node* root, int data)
 {
 	Node* current = Find(root, data);
 	if (current == NULL) return NULL;
-	//Case 1: Node has right substree
-	if (current->right != NULL) {
-		return FindMin(current->right);
+	//Case 1: Node has left substree
+	if (current->left != NULL) {
+		return current->left;
 	}
-	//Case 2: If there is no right substree
+	//Case 2: If there is no left substree
 	else {
-		Node* successor = NULL;
+		Node* predecessor = NULL;
 		Node* ancestor = root;
 		while (ancestor != current) {
-			if (current->data < ancestor->data) {
-				successor = ancestor;
-				ancestor = ancestor->left;
+			if (current->data > ancestor->data) {
+				predecessor = ancestor;
+				ancestor = ancestor->right;
 			}
 			else
-				ancestor = ancestor->right;
+				ancestor = ancestor->left;
 		}
-		return successor;
+		return predecessor;
 	}
 }
 
@@ -109,5 +117,7 @@ int main()
 
 	Node* GSP = GetSuccessorPtr(root, 6);
 	std::cout << GSP->data << std::endl;
+	Node* GPP = GetPredecessorPtr(root, 16);
+	std::cout << GPP->data << std::endl;
 
 }
